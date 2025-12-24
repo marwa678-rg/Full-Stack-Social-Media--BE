@@ -4,10 +4,12 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors =require("cors");
 const { default: rateLimit } = require("express-rate-limit");
-
+const path = require("path");
 //Internal Imports
 const { connectToDatabase } = require("./config/dbConfig");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 
 
 //Global Config
@@ -23,7 +25,10 @@ app.use(express.json());
 app.use(cors({
   origin:JSON.parse(process.env.PRODUCTION_ENV) ?
    process.env.CLIENT_ORIGIN : "*"}));
-
+ 
+   //serve static files 
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));//user frontend -> access
+app.use("/public",express.static(path.join(__dirname,"..","public")))//server -> access default
 const PORT=process.env.PORT || 3000;
 
 //Rate Limit
@@ -35,13 +40,14 @@ app.use(limiter);
 
 //Main Routes
 app.get("/",(request,response)=>{
-  response.send("Welcome To Our Backend ")
+ response.send("Welcome To Our Backend ")
+ 
 });
 
 
 //API Routes
 app.use("/api/v1/auth",authRoutes)
-
+app.use("/api/v1/users",userRoutes)
 
 
 //Connect Cloud

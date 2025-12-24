@@ -21,7 +21,7 @@ async function register(request,response){
       return response.status(400).json({messages:error.details.map((e)=>e.message)})
     }
     //Extract Data
-    const {email,password}=value;
+    const {email,password,name}=value;
     //Check user
     const userExisting = await User.findOne({email});
     if(userExisting){
@@ -34,6 +34,7 @@ async function register(request,response){
     
     //create user 
       const user = await User.create({
+        name,
         email,
         password:hashPassword,
         otp,
@@ -120,7 +121,13 @@ async function login(request,response){
         process.env.JWT_SECRET,
         {expiresIn:process.env.JWT_EXPIRES_IN});
         response.json({
-          message:"Loggedin Successfully",token
+          message:"Loggedin Successfully",token,
+          user:{
+            id:user._id,
+            role:user.role,
+            email:user.email,
+            name:user.name,
+          },
         })
   } catch (error) {
     console.log(error);
