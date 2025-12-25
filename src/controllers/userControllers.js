@@ -1,6 +1,7 @@
 
 
 //Imports
+const { Post } = require("../models/Post");
 const {User}= require("../models/User")
 
 //Internal Imports
@@ -66,6 +67,20 @@ async function getAllUsers(request,response){
     response.status(500).json({message:"Internal Server Error"})
   }
 }
+//TODO:Get my posts
+async function getMyPosts(request,response){
+  try {
+    const userId = request.user.id;
+    const posts = await Post.find({userId})
+    .populate("userId","name avatar") 
+    .sort({createdAt:-1});
+
+    response.status(200).json({count:posts.length,posts});
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({message:"Internal Server Error"})
+  }
+}
 
 
 
@@ -83,4 +98,4 @@ async function getAllUsers(request,response){
 
 
 
-module.exports={updateProfile,getMyProfile,getAllUsers}
+module.exports={updateProfile,getMyProfile,getAllUsers,getMyPosts}

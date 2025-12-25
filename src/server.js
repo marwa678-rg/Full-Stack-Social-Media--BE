@@ -9,7 +9,7 @@ const path = require("path");
 const { connectToDatabase } = require("./config/dbConfig");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-
+const postRoutes=require("./routes/postRoutes");
 
 
 //Global Config
@@ -27,8 +27,8 @@ app.use(cors({
    process.env.CLIENT_ORIGIN : "*"}));
  
    //serve static files 
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));//user frontend -> access
-app.use("/public",express.static(path.join(__dirname,"..","public")))//server -> access default
+app.use("/uploads", express.static(path.join(__dirname,"../uploads")));//user frontend -> access
+app.use("/public",express.static(path.join(__dirname,"../public")))//server -> access default
 const PORT=process.env.PORT || 3000;
 
 //Rate Limit
@@ -48,7 +48,7 @@ app.get("/",(request,response)=>{
 //API Routes
 app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/users",userRoutes)
-
+app.use("/api/v1/posts",postRoutes)
 
 //Connect Cloud
 connectToDatabase();
