@@ -6,15 +6,14 @@ const upload = require("../utils/upload");
 
 
 //Internal Imports
-const { updateProfile, getMyProfile,getAllUsers, getMyPosts } = require("../controllers/userControllers");
+const { updateProfile, getMyProfile,getAllUsers, getMyPosts, searchUsers } = require("../controllers/userControllers");
 const { authMiddleware} = require("../middlewares/auth.middleware");
 const { roleMiddleware } = require("../middlewares/role.middleware");
 
 
 
-//TODO:Get All Users (Admin)
-router.get("/",authMiddleware,roleMiddleware("admin"),getAllUsers)
-
+//TODO:Get all users (Sreach User any -logged-in  user)
+router.get("/search",authMiddleware,searchUsers)
 //TODO:Get my Profile
 router.get("/myProfile",authMiddleware,getMyProfile);
 
@@ -24,7 +23,8 @@ router.put("/profile/update",authMiddleware,upload.single("avatar"),updateProfil
 //TODO:get posts of me
 router.get("/myPosts",authMiddleware,getMyPosts)
 
-
+//TODO:Get All Users (Admin)
+router.get("/",authMiddleware,roleMiddleware("admin"),getAllUsers)
 
 
 

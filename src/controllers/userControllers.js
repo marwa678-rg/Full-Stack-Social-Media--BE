@@ -7,7 +7,38 @@ const {User}= require("../models/User")
 //Internal Imports
 const { updateProfileSchema } = require("../validation/userValidate")
 
+//TODO:search users
+async function searchUsers(request,response){
+  try {
+    const userId=request.user.id;
+    //pagination & search
+    let {page=1 ,pageSize=10,search=""}=request.query;
+    const limit =pageSize;
+    const skip=(page -1) * pageSize ;
+    //search codition
+    const query = {_id:{$ne:userId},//hide my profile from search
+                    name:{$regex:search,$options:"i"}}
+    const users= await User.find(query)
+    .select("name avatar")
+    .skip(skip)
+    .limit(limit);
 
+//total
+const total = await User.countDocuments(query);
+response.status(200).json({message:"Users fetched successfully",
+  users,
+  page,
+  limit,
+  total,
+  totalPages:Math.ceil(total/limit),
+  count: users.length,
+  
+});
+  } catch (error) {
+    console.log(error)
+    return response.status(500).json({message:"Internal Server Error"})
+  }
+}
 
 //TODO:Update profile
 async function updateProfile(request,response){
@@ -98,4 +129,4 @@ async function getMyPosts(request,response){
 
 
 
-module.exports={updateProfile,getMyProfile,getAllUsers,getMyPosts}
+module.exports={searchUsers,updateProfile,getMyProfile,getAllUsers,getMyPosts}
