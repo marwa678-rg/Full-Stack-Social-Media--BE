@@ -10,7 +10,7 @@ const { connectToDatabase } = require("./config/dbConfig");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes=require("./routes/postRoutes");
-
+const commentRoutes = require("./routes/commentRoutes")
 
 //Global Config
 dotenv.config();
@@ -49,7 +49,7 @@ app.get("/",(request,response)=>{
 app.use("/api/v1/auth",authRoutes)
 app.use("/api/v1/users",userRoutes)
 app.use("/api/v1/posts",postRoutes)
-
+app.use("/api/v1/comments",commentRoutes)
 //Connect Cloud
 connectToDatabase();
 

@@ -11,6 +11,7 @@ const { authMiddleware} = require("../middlewares/auth.middleware");
 const { roleMiddleware } = require("../middlewares/role.middleware");
 
 
+
 //TODO:Get All Users (Admin)
 router.get("/",authMiddleware,roleMiddleware("admin"),getAllUsers)
 

@@ -131,11 +131,39 @@ async function deletePost(request,response){
     response.status(500).json({message:"Internal Server Error"})
   }
 }
+//TODO: Like / Dislike post
+async function handleLikePost(request,response){
+try {
+  //Get Post
+  const postId = request.params.id;
+  //check post
+  const post = await Post.findById(postId);
+  if(!post)return response.status(404).json({message:"Post Not Found"});
+  //check user like post
+  const userId = request.user.id;
+  const userExist = post.likes.includes(userId);
+  console.log(userExist);
+  if(userExist){
+    //dislike
+  post.likes = post.likes.filter((id)=>id.toString() !== userId)
+  }else{
+    //like
+   post.likes.push(userId);
+  }
 
+  //save
+  await post.save();
+  response.json({post,likes:post.likes.length});
+} catch (error) {
+  console.log(error)
+  response.status(500).json({message:"Internal Server Error"})
+}
+}
 
 module.exports={
   createPost,
   getAllPosts,
   updatePost,
-  deletePost
+  deletePost,
+  handleLikePost,
 }
